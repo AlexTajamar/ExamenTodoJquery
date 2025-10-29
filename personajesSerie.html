@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Series</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <style>
+      img {
+        width: 150px;
+        height: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Home</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="insertPersonaje.html"
+                >Nuevo Personaje</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="updatePersonajes.html"
+                >Modificar Personaje</a
+              >
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Equipos
+              </a>
+              <ul class="dropdown-menu" id="seriesdrop"></ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <h1>Serie</h1>
+    <div id="personajes"></div>
+    <!-- jQuery -->
+    <script src="js/jquery-3.7.1.js"></script>
+    <!-- Bootstrap JS Bundle -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        $.getJSON(
+          "https://apiseriespersonajes2024.azurewebsites.net/api/Series",
+          function (data) {
+            console.log("Leyendo Series drop");
+            $.each(data, function (index, serie) {
+              $("#seriesdrop").append(
+                '<li><a class="dropdown-item" href="serie.html?id=' +
+                  serie.idSerie +
+                  '">' +
+                  serie.nombre +
+                  "</a></li>"
+              );
+            });
+          }
+        );
+        const urlParams = new URLSearchParams(window.location.search);
+        const idSerie = parseInt(urlParams.get("id"));
+
+        function getEquipo(idSerie) {
+          $.getJSON(
+            "https://apiseriespersonajes2024.azurewebsites.net/api/Series/PersonajesSerie/" +
+              idSerie,
+            function (data) {
+              console.log(data);
+              var html = "";
+              html += "<a  href=serie.html?id=" + idSerie + ">Volver</a>";
+              html += "<table class=table form-control>";
+              html +=
+                "<thead><tr><th>Personaje</th><th>Imagen</th></tr></thead>";
+              $.each(data, function (index, serie) {
+                html +=
+                  "<tbody><tr><td>" +
+                  serie.nombre +
+                  "</td><td><img src=" +
+                  serie.imagen +
+                  "><td></tr></tbody>";
+              });
+              html += "</table>";
+
+              $("#personajes").html(html);
+            }
+          );
+        }
+
+        getEquipo(idSerie);
+      });
+    </script>
+  </body>
+</html>
