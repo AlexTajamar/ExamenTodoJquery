@@ -134,10 +134,10 @@
             idPersonaje +
             "/" +
             idSerie,
-          type: "POST",
+          type: "PUT",
           success: function (response) {
             console.log("modificado correctamente");
-            window.location.href = "homeseries.html";
+            window.location.href = "personajesSerie.html?id=" + idPersonaje;
           },
         });
       }
